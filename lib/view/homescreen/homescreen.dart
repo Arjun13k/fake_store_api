@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fake_store_api/controller/homescreen_controler.dart';
 import 'package:fake_store_api/view/homescreen/cart_list.dart';
 
@@ -35,11 +36,11 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CartList(),
-                    ));
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //       builder: (context) => CartList(model:providerObj.fakemodel[index] ,),
+                //     ));
               },
               icon: Icon(Icons.shopping_cart))
         ],
@@ -49,26 +50,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 child: InkWell(
-                  onTap: () => showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text("Are you sure you want to add this"),
-                      actions: [
-                        TextButton(
-                            onPressed: () {
-                              providerObj.addData();
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CartList(),
-                                  ));
-                            },
-                            child: Text("YES")),
-                        Spacer(),
-                        TextButton(onPressed: () {}, child: Text("NO"))
-                      ],
-                    ),
-                  ),
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CartList(
+                          model: providerObj.fakemodel[index],
+                        ),
+                      )),
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                     width: double.infinity,
@@ -76,25 +64,33 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Colors.green.withOpacity(.6),
                         borderRadius: BorderRadius.circular(10)),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          providerObj.fakemodel?.image ?? "",
+                        CachedNetworkImage(
+                            imageUrl:
+                                "${providerObj.fakemodel[index].image ?? ""}"),
+                        //  (
+                        //       providerObj.fakemodel[index].image ?? "",
+                        //     ),
+                        SizedBox(
+                          height: 10,
                         ),
                         Text(
-                          providerObj.fakemodel?.title ?? "",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 25),
-                        ),
-                        Text(
-                          "\$${providerObj.fakemodel?.price.toString() ?? ""}",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 25),
-                        ),
-                        Text(
-                          providerObj.fakemodel?.description ?? "",
+                          providerObj.fakemodel[index].title ?? "",
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 15),
                         ),
+                        Text(
+                          "\$${providerObj.fakemodel[index].price ?? ""}",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 25),
+                        ),
+                        // Text(
+                        //   providerObj.fakemodel[index].description ?? "",
+                        //   style: TextStyle(
+                        //       fontWeight: FontWeight.bold, fontSize: 18),
+                        // ),
                       ],
                     ),
                   ),
@@ -103,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
           separatorBuilder: (context, index) => SizedBox(
                 height: 10,
               ),
-          itemCount: 6),
+          itemCount: providerObj.fakemodel.length),
     );
   }
 }
